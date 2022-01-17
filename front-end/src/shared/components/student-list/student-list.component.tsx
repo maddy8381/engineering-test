@@ -1,12 +1,11 @@
-import React, { useMemo } from 'react';
-import { isEmpty } from 'shared/helpers/general-utils';
-import { RollStateType } from 'shared/models/roll';
-import { StudentWithRollState } from 'shared/models/student';
-import {
-	StudentListTile
-} from 'staff-app/components/student-list-tile/student-list-tile.component';
-import { LoadFailed } from '../load-failed/load-failed.component';
-import { LoadingSpinner } from '../loading-spinner/loading-spinner.component';
+import React, { useMemo } from "react"
+import { isEmpty } from "shared/helpers/general-utils"
+import { RollStateType } from "shared/models/roll"
+import { StudentWithRollState } from "shared/models/student"
+import { StudentListTile } from "staff-app/components/student-list-tile/student-list-tile.component"
+import { LoadFailed } from "../load-failed/load-failed.component"
+import { LoadingSpinner } from "../loading-spinner/loading-spinner.component"
+import styled from "styled-components"
 
 interface StudentListProps {
   studentsWithRollState: StudentWithRollState[]
@@ -28,15 +27,18 @@ const areStudentsLoaded = (studentsLoadState: string): boolean => studentsLoadSt
 
 export const StudentList: React.FC<StudentListProps> = React.memo(({ studentsWithRollState, studentsLoadState, onRollStateChange, isReadonly, isRollMode }: StudentListProps) => {
   const studentListContentFrom = useMemo(() => {
-    return studentsWithRollState.map((studentWithRollState: StudentWithRollState, index: number) => (
-      <StudentListTile
-        onRollStateChange={onRollStateChange}
-        isReadonly={isReadonly}
-        key={"" + studentWithRollState.id + index}
-        isRollMode={isRollMode}
-        studentWithRollState={studentWithRollState}
-      />
-    ))
+    if (studentsWithRollState.length === 0) {
+      return <S.EmptyDiv>No Result Found</S.EmptyDiv>
+    } else
+      return studentsWithRollState.map((studentWithRollState: StudentWithRollState, index: number) => (
+        <StudentListTile
+          onRollStateChange={onRollStateChange}
+          isReadonly={isReadonly}
+          key={"" + studentWithRollState.id + index}
+          isRollMode={isRollMode}
+          studentWithRollState={studentWithRollState}
+        />
+      ))
   }, [studentsWithRollState, onRollStateChange, isReadonly, isRollMode])
 
   const studentsContent = useMemo(() => {
@@ -57,3 +59,10 @@ export const StudentList: React.FC<StudentListProps> = React.memo(({ studentsWit
   }
   return <>{studentsContent}</>
 })
+
+const S = {
+  EmptyDiv: styled.div`
+    margin: auto;
+    margin-top: 10px;
+  `,
+}
