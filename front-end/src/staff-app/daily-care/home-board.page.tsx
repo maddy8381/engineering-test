@@ -12,6 +12,7 @@ import { isEmpty } from "shared/helpers/general-utils"
 import { RollInput, RollStateType } from "shared/models/roll"
 import { Student, StudentWithRollState } from "shared/models/student"
 import { Spacing } from "shared/styles/styles"
+import { RollStateFilter, RollStateItemType } from "shared/types"
 
 const snackbarOrigin = { vertical: "bottom", horizontal: "right" } as SnackbarOrigin
 
