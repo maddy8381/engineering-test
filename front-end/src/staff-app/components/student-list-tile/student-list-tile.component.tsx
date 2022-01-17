@@ -1,30 +1,41 @@
-import React from "react"
-import styled from "styled-components"
-import { Spacing, BorderRadius, FontWeight } from "shared/styles/styles"
-import { Images } from "assets/images"
-import { Colors } from "shared/styles/colors"
-import { Person, PersonHelper } from "shared/models/person"
-import { RollStateSwitcher } from "staff-app/components/roll-state/roll-state-switcher.component"
+import { Images } from 'assets/images';
+import React, { useCallback, useMemo } from 'react';
+import { RollStateType } from 'shared/models/roll';
+import { StudentHelper, StudentWithRollState } from 'shared/models/student';
+import { Colors } from 'shared/styles/colors';
+import { BorderRadius, FontWeight, Spacing } from 'shared/styles/styles';
+import styled from 'styled-components';
+import { RollSwitch } from './roll-switch.component';
 
-interface Props {
-  isRollMode?: boolean
-  student: Person
+interface StudentListTileProps {
+  isRollMode: boolean
+  studentWithRollState: StudentWithRollState
+  isReadonly: boolean
+  onRollStateChange?: (studentWithRollState: StudentWithRollState, newRollState: RollStateType) => void
 }
-export const StudentListTile: React.FC<Props> = ({ isRollMode, student }) => {
+
+export const StudentListTile: React.FC<StudentListTileProps> = React.memo(({ studentWithRollState, onRollStateChange, ...props }: StudentListTileProps) => {
+  const fullName = useMemo(() => StudentHelper.getFullName(studentWithRollState), [studentWithRollState])
+
+  const rollStateChanged = useCallback(
+    (newRollState: RollStateType) => {
+      if (onRollStateChange) {
+        onRollStateChange(studentWithRollState, newRollState)
+      }
+    },
+    [onRollStateChange, studentWithRollState]
+  )
+
   return (
     <S.Container>
       <S.Avatar url={Images.avatar}></S.Avatar>
       <S.Content>
-        <div>{PersonHelper.getFullName(student)}</div>
+        <div>{fullName}</div>
       </S.Content>
-      {isRollMode && (
-        <S.Roll>
-          <RollStateSwitcher />
-        </S.Roll>
-      )}
+      <RollSwitch onRollStateChange={rollStateChanged} isReadonly={props.isReadonly} isRollMode={props.isRollMode} studentWithRollState={studentWithRollState} />
     </S.Container>
   )
-}
+})
 
 const S = {
   Container: styled.div`
@@ -55,10 +66,5 @@ const S = {
     padding: ${Spacing.u2};
     color: ${Colors.dark.base};
     font-weight: ${FontWeight.strong};
-  `,
-  Roll: styled.div`
-    display: flex;
-    align-items: center;
-    margin-right: ${Spacing.u4};
   `,
 }

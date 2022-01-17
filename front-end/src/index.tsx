@@ -1,9 +1,10 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
-import "index.css"
-import StaffApp from "staff-app/app"
-import { GlobalStyle } from "shared/styles/global-style"
+import 'index.css';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import * as serviceWorker from 'shared/helpers/service-worker';
+import { GlobalStyle } from 'shared/styles/global-style';
+import StaffApp from 'staff-app/app';
 
 const Home: React.FC = () => {
   return (
@@ -28,3 +29,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 )
+
+serviceWorker.register()

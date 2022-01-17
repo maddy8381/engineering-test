@@ -1,15 +1,16 @@
-import { useReducer, useCallback } from "react"
-import { ApiResponse, ResponseError } from "shared/interfaces/http.interface"
-import { RollInput } from "shared/models/roll"
-import { getHomeboardStudents } from "api/get-homeboard-students"
-import { getActivities } from "api/get-activities"
-import { saveActiveRoll } from "api/save-active-roll"
+import { getActivities } from 'api/get-activities';
+import { getHomeboardStudents } from 'api/get-homeboard-students';
+import { saveActiveRoll } from 'api/save-active-roll';
+import { useCallback, useReducer } from 'react';
+import { ApiResponse, ResponseError } from 'shared/interfaces/http.interface';
+import { RollInput } from 'shared/models/roll';
+import { LoadState } from 'shared/types';
 
 interface Options {
   url: Endpoint
   initialLoadState?: LoadState
 }
-export function useApi<ReturnType = {}>({ url, initialLoadState = "loading" }: Options) {
+export function useApi<ReturnType = {}>({ url, initialLoadState = "unloaded" }: Options) {
   const [state, dispatch] = useReducer(stateReducer<ReturnType>(), { data: undefined, loadState: initialLoadState, error: undefined })
   const callApi = useCallback(
     async (params?: object) => {
@@ -60,4 +61,3 @@ type ReducerAction<T> = { type: "success"; result: T } | { type: "error"; error:
 
 /* use-api options interfaces */
 export type Endpoint = "get-homeboard-students" | "save-roll" | "get-activities"
-export type LoadState = "unloaded" | "loading" | "loaded" | "error"

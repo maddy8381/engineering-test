@@ -1,35 +1,30 @@
-import React from "react"
-import styled from "styled-components"
-import { NavLink } from "react-router-dom"
-import { Colors } from "shared/styles/colors"
-import { FontWeight } from "shared/styles/styles"
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { Colors } from 'shared/styles/colors';
+import { FontWeight } from 'shared/styles/styles';
+import styled from 'styled-components';
 
-export const Header: React.FC = () => {
+export const Header: React.FC = React.memo(() => {
   return (
     <S.Header>
       <S.HeaderItems>
-        <NavItem to="/">Orah</NavItem>
+        <S.HeaderItem to="/">Boardingware</S.HeaderItem>
         <NavItem to="daily-care">Daily Care</NavItem>
         <NavItem to="activity">Activity</NavItem>
       </S.HeaderItems>
     </S.Header>
   )
-}
+})
 
-const NavItem: React.FC<{ to: string }> = (props) => {
-  const activeStyle = ({ isActive }: { isActive: boolean }) => ({
-    textDecoration: "none",
-    fontWeight: FontWeight.strong,
-    color: "#fff",
-    padding: "18px 20px 17px",
-    backgroundColor: isActive ? "#1b4f90" : Colors.blue.base,
-  })
+const activeNavItemStyle = { backgroundColor: "#1b4f90" }
+
+const NavItem: React.FC<{ to: string }> = React.memo((props) => {
   return (
-    <NavLink to={props.to} style={activeStyle}>
+    <S.HeaderItem to={props.to} activeStyle={activeNavItemStyle}>
       {props.children}
-    </NavLink>
+    </S.HeaderItem>
   )
-}
+})
 
 const S = {
   Header: styled.header`
@@ -42,5 +37,11 @@ const S = {
   HeaderItems: styled.nav`
     display: flex;
     height: 100%;
+  `,
+  HeaderItem: styled(NavLink)`
+    text-decoration: none;
+    font-weight: ${FontWeight.strong};
+    color: #fff;
+    padding: 18px 20px 17px;
   `,
 }

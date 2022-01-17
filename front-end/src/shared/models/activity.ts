@@ -1,7 +1,9 @@
-import { Roll } from "shared/models/roll"
+import { Roll } from 'shared/models/roll';
+
+export type ActivityType = "roll"
 
 export interface Activity {
-  type: "roll"
-  date: Date
+  type: ActivityType
+  date: string
   entity: Roll
 }

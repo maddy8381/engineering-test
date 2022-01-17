@@ -1,7 +1,7 @@
-import { httpMock } from "shared/helpers/http-mock"
-import { get, add, LocalStorageKey } from "shared/helpers/local-storage"
-import { ApiResponse } from "shared/interfaces/http.interface"
-import { Roll, RollInput } from "shared/models/roll"
+import { httpMock } from 'shared/helpers/http-mock';
+import { add, get, LocalStorageKey } from 'shared/helpers/local-storage';
+import { ApiResponse } from 'shared/interfaces/http.interface';
+import { Roll, RollInput } from 'shared/models/roll';
 
 export async function saveActiveRoll(roll: RollInput): Promise<ApiResponse<{}>> {
   try {

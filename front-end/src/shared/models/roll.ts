@@ -1,12 +1,16 @@
 export interface Roll {
   id: number
   name: string
-  completed_at: Date
-  student_roll_states: { student_id: number; roll_state: RolllStateType }[]
+  completed_at: string
+  student_roll_states: StudentStoredRollState[]
 }
 
 export interface RollInput {
-  student_roll_states: { student_id: number; roll_state: RolllStateType }[]
+  student_roll_states: StudentStoredRollState[]
 }
 
-export type RolllStateType = "unmark" | "present" | "absent" | "late"
+export type StudentStoredRollStateType = "unmarked" | "present" | "absent" | "late"
+
+export type StudentStoredRollState = { student_id: number; roll_state: StudentStoredRollStateType }
+
+export type RollStateType = "unmark" | "present" | "absent" | "late"

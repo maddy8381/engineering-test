@@ -1,44 +1,70 @@
-import React from "react"
-import styled from "styled-components"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { RollStateIcon } from "staff-app/components/roll-state/roll-state-icon.component"
-import { Spacing, FontWeight } from "shared/styles/styles"
-import { RolllStateType } from "shared/models/roll"
+import React, { useCallback, useMemo } from 'react';
+import { RollStateType } from 'shared/models/roll';
+import { FontWeight, Spacing } from 'shared/styles/styles';
+import {
+	RollStateFilter, RollStateItemType, StateListItem
+} from 'shared/types';
+import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+	RollStateIcon
+} from 'staff-app/components/roll-state/roll-state-icon.component';
 
-interface Props {
-  stateList: StateList[]
-  onItemClick?: (type: ItemType) => void
+interface RollStateListProps {
+  stateList: StateListItem[]
+  onRollStateClick?: (rollStateItemType: RollStateItemType) => void
   size?: number
+  rollStateFilter: RollStateFilter
 }
-export const RollStateList: React.FC<Props> = ({ stateList, size = 14, onItemClick }) => {
-  const onClick = (type: ItemType) => {
-    if (onItemClick) {
-      onItemClick(type)
+
+type IconClickCallback = (rollStateItemType: RollStateItemType) => void
+
+const getListItems = (stateList: StateListItem[], size: number, onClick: IconClickCallback, rollStateFilter: RollStateFilter) =>
+  stateList.map((stateListItem: StateListItem, index: number) => {
+    if (stateListItem.type === "all") {
+      return getListItemWithFAIcon(stateListItem, index, onClick, rollStateFilter)
     }
-  }
+    return getListItemWithRollStateIcon(stateListItem, index, size, onClick, rollStateFilter)
+  })
 
+const getListItemWithFAIcon = (stateListItem: StateListItem, index: number, onClick: IconClickCallback, rollStateFilter: RollStateFilter) => {
+  const isActive = rollStateFilter === "all"
   return (
-    <S.ListContainer>
-      {stateList.map((s, i) => {
-        if (s.type === "all") {
-          return (
-            <S.ListItem key={i}>
-              <FontAwesomeIcon icon="users" size="sm" style={{ cursor: "pointer" }} onClick={() => onClick(s.type)} />
-              <span>{s.count}</span>
-            </S.ListItem>
-          )
-        }
-
-        return (
-          <S.ListItem key={i}>
-            <RollStateIcon type={s.type} size={size} onClick={() => onClick(s.type)} />
-            <span>{s.count}</span>
-          </S.ListItem>
-        )
-      })}
-    </S.ListContainer>
+    <S.ListItem key={index}>
+      <S.RollStateIconContainer isActive={isActive}>
+        <S.AllUsersIcon icon="users" size="sm" onClick={() => onClick(stateListItem.type)} />
+      </S.RollStateIconContainer>
+      <span>{stateListItem.count}</span>
+    </S.ListItem>
   )
 }
+
+const getListItemWithRollStateIcon = (stateListItem: StateListItem, index: number, size: number, onClick: IconClickCallback, rollStateFilter: RollStateFilter) => {
+  const isActive = rollStateFilter === stateListItem.type
+  return (
+    <S.ListItem key={index}>
+      <S.RollStateIconContainer isActive={isActive}>
+        <RollStateIcon type={stateListItem.type as RollStateType} size={size} onClick={() => onClick(stateListItem.type)} />
+      </S.RollStateIconContainer>
+      <span>{stateListItem.count}</span>
+    </S.ListItem>
+  )
+}
+
+export const RollStateList: React.FC<RollStateListProps> = React.memo(({ stateList, size = 14, onRollStateClick, rollStateFilter }: RollStateListProps) => {
+  const onClick = useCallback(
+    (type: RollStateItemType) => {
+      if (onRollStateClick) {
+        onRollStateClick(type)
+      }
+    },
+    [onRollStateClick]
+  )
+
+  const listItemsContent = useMemo(() => getListItems(stateList, size, onClick, rollStateFilter), [stateList, size, onClick, rollStateFilter])
+
+  return <S.ListContainer>{listItemsContent}</S.ListContainer>
+})
 
 const S = {
   ListContainer: styled.div`
@@ -55,11 +81,11 @@ const S = {
       margin-left: ${Spacing.u2};
     }
   `,
+  RollStateIconContainer: styled.span<{ isActive: boolean }>`
+    border: ${({ isActive }) => (isActive ? "2px solid #e7e7e7" : "0")};
+    border-radius: 50%;
+  `,
+  AllUsersIcon: styled(FontAwesomeIcon)`
+    cursor: "pointer";
+  `,
 }
-
-interface StateList {
-  type: ItemType
-  count: number
-}
-
-type ItemType = RolllStateType | "all"

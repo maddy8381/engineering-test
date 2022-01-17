@@ -1,6 +1,6 @@
-import React from "react"
-import styled from "styled-components"
-import { Spacing } from "shared/styles/styles"
+import React from 'react';
+import { Spacing } from 'shared/styles/styles';
+import styled from 'styled-components';
 
 interface Props {
   padding?: string

@@ -1,8 +1,8 @@
-import { httpMock } from "shared/helpers/http-mock"
-import { get, LocalStorageKey } from "shared/helpers/local-storage"
-import { ApiResponse } from "shared/interfaces/http.interface"
-import { Activity } from "shared/models/activity"
-import { Roll } from "shared/models/roll"
+import { httpMock } from 'shared/helpers/http-mock';
+import { get, LocalStorageKey } from 'shared/helpers/local-storage';
+import { ApiResponse } from 'shared/interfaces/http.interface';
+import { Activity } from 'shared/models/activity';
+import { Roll } from 'shared/models/roll';
 
 export async function getActivities(): Promise<ApiResponse<{ activity: Activity[] }>> {
   try {
